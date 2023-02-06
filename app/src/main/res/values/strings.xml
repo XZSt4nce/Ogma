@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Ogma</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_shedule">Расписание</string>
+    <string name="title_attendance">Посещаемость</string>
+    <string name="title_chat">Чат</string>
+    <string name="title_options">Настройки</string>
+</resources>
