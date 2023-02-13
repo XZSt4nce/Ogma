@@ -1,8 +1,7 @@
 package com.example.ogma.ui.login;
 
-import static com.example.ogma.data.HashPassword.encryptThisString;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,16 +10,17 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.ogma.HomeActivity;
 import com.example.ogma.R;
 import com.example.ogma.databinding.ActivityLoginBinding;
-
-import java.util.Locale;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -30,18 +30,20 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        com.example.ogma.databinding.ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        final EditText usernameEditText = binding.username;
-        final EditText passwordEditText = binding.password;
-        final Button loginButton = binding.login;
-        final ProgressBar loadingProgressBar = binding.loading;
+        EditText usernameEditText = binding.username;
+        EditText passwordEditText = binding.password;
+        Button loginButton = binding.login;
+        ProgressBar loadingProgressBar = binding.loading;
+        LifecycleOwner owner = this;
 
-        loginViewModel.getLoginFormState().observe(this, loginFormState -> {
+        loginViewModel.getLoginFormState().observe(owner, loginFormState -> {
+
             if (loginFormState == null) {
                 return;
             }
@@ -54,11 +56,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        loginViewModel.getLoginResult().observe(this, loginResult -> {
+        loginViewModel.getLoginResult().observe(owner, loginResult -> {
             if (loginResult == null) {
                 return;
             }
             loadingProgressBar.setVisibility(View.GONE);
+            loginButton.setEnabled(true);
             if (loginResult.getError() != null) {
                 showLoginFailed(loginResult.getError());
             }
@@ -66,12 +69,10 @@ public class LoginActivity extends AppCompatActivity {
                 updateUiWithUser(loginResult.getSuccess());
             }
             setResult(Activity.RESULT_OK);
-
-            //Complete and destroy login activity once successful
-            finish();
         });
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
+            String username, password;
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 // ignore
@@ -79,40 +80,51 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ignore
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                loginViewModel.loginDataChanged(passwordEditText.getText().toString());
+                username = usernameEditText.getText().toString().trim();
+                password = passwordEditText.getText().toString();
+                loginViewModel.loginDataChanged(username, password);
             }
         };
         usernameEditText.addTextChangedListener(afterTextChangedListener);
         passwordEditText.addTextChangedListener(afterTextChangedListener);
+
         passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                String username = usernameEditText.getText().toString().trim().toLowerCase(Locale.ROOT);
-                String password = encryptThisString(passwordEditText.getText().toString(), username);
+                String username = usernameEditText.getText().toString().trim().toLowerCase();
+                String password = passwordEditText.getText().toString();
+                loadingProgressBar.setVisibility(View.VISIBLE);
+                loginButton.setEnabled(false);
                 loginViewModel.login(username, password);
             }
             return false;
         });
 
         loginButton.setOnClickListener(v -> {
+            String username = usernameEditText.getText().toString().trim().toLowerCase();
+            String password = passwordEditText.getText().toString();
             loadingProgressBar.setVisibility(View.VISIBLE);
-            String username = usernameEditText.getText().toString().trim().toLowerCase(Locale.ROOT);
-            String password = encryptThisString(passwordEditText.getText().toString(), username);
+            loginButton.setEnabled(false);
             loginViewModel.login(username, password);
         });
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
+        TextView error = findViewById(R.id.error);
+        error.setText("");
         String welcome = getString(R.string.welcome) + model.getDisplayName();
         // TODO : initiate successful logged in experience
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
+        //Intent intent = new Intent(this, HomeActivity.class);
+        //startActivity(intent);
+        //finish();
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
-        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+        TextView error = findViewById(R.id.error);
+        error.setText(errorString);
     }
 }

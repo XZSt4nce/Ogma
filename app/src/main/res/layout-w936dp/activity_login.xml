@@ -17,19 +17,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+        <TextView
+            android:id="@+id/error"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="76dp"
+            android:text="@string/error"
+            android:minHeight="48dp"
+            android:textSize="36sp"
+            android:textColor="@color/red"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="VisualLintTextFieldSize" />
+
         <EditText
             android:id="@+id/username"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="96dp"
+            android:layout_marginTop="16dp"
+            android:autofillHints=""
             android:hint="@string/prompt_login"
-            android:inputType="textEmailAddress"
+            android:inputType="text"
             android:minHeight="48dp"
-            android:selectAllOnFocus="true"
+            android:selectAllOnFocus="false"
+            android:textSize="36sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:autofillHints="" />
+            app:layout_constraintTop_toBottomOf="@+id/error" />
 
         <EditText
             android:id="@+id/password"
@@ -41,6 +56,7 @@
             android:imeOptions="actionDone"
             android:inputType="textPassword"
             android:minHeight="48dp"
+            android:textSize="36sp"
             android:selectAllOnFocus="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

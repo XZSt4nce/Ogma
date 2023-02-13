@@ -13,4 +13,8 @@
     <string name="invalid_username_or_password">Login or password is invalid!</string>
     <string name="login_failed">Login failed</string>
     <string name="app_name" translatable="false">Ogma</string>
+    <string name="invalid_username">Login can\'t be empty</string>
+    <string name="invalid_password">Password can\'t be empty</string>
+    <string name="connection_error">Server connection error</string>
+    <string name="error" />
 </resources>

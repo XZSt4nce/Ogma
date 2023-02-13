@@ -13,4 +13,7 @@
     <string name="welcome">"Добро пожаловать, "</string>
     <string name="invalid_username_or_password">Логин или пароль неверны!</string>
     <string name="login_failed">Ошибка входа</string>
+    <string name="invalid_username">Логин не может быть пустым</string>
+    <string name="invalid_password">Пароль не может быть пустым</string>
+    <string name="connection_error">Ошибка соединения с сервером</string>
 </resources>
