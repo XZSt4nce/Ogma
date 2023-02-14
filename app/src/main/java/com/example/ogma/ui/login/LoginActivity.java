@@ -1,5 +1,7 @@
 package com.example.ogma.ui.login;
 
+import static com.example.ogma.data.RussianWord.russian;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,9 +20,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.ogma.HomeActivity;
 import com.example.ogma.R;
+import com.example.ogma.StudentActivity;
 import com.example.ogma.databinding.ActivityLoginBinding;
+
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -113,18 +117,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void updateUiWithUser(LoggedInUserView model) {
-        TextView error = findViewById(R.id.error);
-        error.setText("");
-        String welcome = getString(R.string.welcome) + model.getDisplayName();
-        // TODO : initiate successful logged in experience
+        String welcome = getString(R.string.welcome) + russian(Objects.requireNonNull(model.getData().get("name")));
         Toast.makeText(getApplicationContext(), welcome, Toast.LENGTH_LONG).show();
-        //Intent intent = new Intent(this, HomeActivity.class);
-        //startActivity(intent);
-        //finish();
+        Intent intent = new Intent(this, StudentActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void showLoginFailed(@StringRes Integer errorString) {
-        TextView error = findViewById(R.id.error);
-        error.setText(errorString);
+        Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_LONG).show();
     }
 }

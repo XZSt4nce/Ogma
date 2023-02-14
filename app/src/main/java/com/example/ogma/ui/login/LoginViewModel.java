@@ -11,6 +11,8 @@ import com.example.ogma.data.LoginRepository;
 import com.example.ogma.data.Result;
 import com.example.ogma.data.model.LoggedInUser;
 
+import java.util.Map;
+
 public class LoginViewModel extends ViewModel {
 
     private final MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
@@ -40,8 +42,8 @@ public class LoginViewModel extends ViewModel {
 
             Result<LoggedInUser> result = loginRepository.login(username, encryptThisString(password, username));
             if (result instanceof Result.Success) {
-                LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-                loginResult.setValue(new LoginResult(new LoggedInUserView(data.getUID(), data.getDisplayName(), data.getLastName(), data.getMiddleName(), data.getRole(), data.getEmail(), data.getPhone(), data.getVk(), data.getTg(), data.getBirthday())));
+                Map<String, String> data = ((Result.Success<LoggedInUser>) result).getData().getData();
+                loginResult.setValue(new LoginResult(new LoggedInUserView(data.get("UID"), data.get("name"), data.get("lastName"), data.get("middleName"), data.get("role"), data.get("email"), data.get("phone"), data.get("vk"), data.get("tg"), data.get("birthday"))));
             } else if (result.toString().equals("Error[exception=Server connection error]")) {
                 loginResult.setValue(new LoginResult(R.string.connection_error));
             } else if (result.toString().equals("Error[exception=Wrong login or password]")) {
