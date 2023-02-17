@@ -1,5 +1,7 @@
 package com.example.ogma.data;
 
+import android.util.Log;
+
 import com.example.ogma.data.model.LoggedInUser;
 import com.vishnusivadas.advanced_httpurlconnection.FetchData;
 import com.vishnusivadas.advanced_httpurlconnection.PutData;
@@ -10,7 +12,7 @@ public class LoginDataSource {
         String[] field = new String[]{"username", "password"};
         String[] data = new String[]{username, password};
         String putResult, fetchResult, id="", name="", lastName="", middleName="", role="", email="", phone="", vk="", tg="", birthday="";
-
+        Log.d("Pass", password);
         FetchData fetchData = new FetchData("https://silentiumguard.com/2508ac21cb37f801a8a00751e78c9a87.php");
         if (fetchData.startFetch()) {
             if (fetchData.onComplete()) {
