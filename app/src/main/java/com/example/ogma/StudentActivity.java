@@ -10,7 +10,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.ogma.databinding.ActivityStudentBinding;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+//import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 
 public class StudentActivity extends AppCompatActivity {
 
@@ -21,7 +22,7 @@ public class StudentActivity extends AppCompatActivity {
         com.example.ogma.databinding.ActivityStudentBinding binding = ActivityStudentBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        //BottomNavigationView navView = findViewById(R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_dashboard)
                 .build();
