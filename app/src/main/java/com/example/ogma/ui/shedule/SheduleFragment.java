@@ -1,5 +1,6 @@
 package com.example.ogma.ui.shedule;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -50,17 +51,18 @@ public class SheduleFragment extends Fragment {
         binding = null;
     }
 
-    private class MyTask extends AsyncTask<Void, Void, String> {
+    @SuppressLint("StaticFieldLeak")
+    private static class MyTask extends AsyncTask<Void, Void, String> {
 
         @Override
         protected String doInBackground(Void... params) {
-            URL url = null;
+            URL url;
             try {
                 url = new URL("https://e-spo.ru/org/rasp/export/site/index?pid=1&RaspBaseSearch%5Bgroup_id%5D=44&RaspBaseSearch%5Bsemestr%5D=vesna&RaspBaseSearch%5Bprepod_id%5D=");
             } catch (MalformedURLException e) {
                 throw new RuntimeException(e);
             }
-            Document doc = null;
+            Document doc;
             try {
                 doc = Jsoup.parse(url, 3000);
             } catch (IOException e) {
