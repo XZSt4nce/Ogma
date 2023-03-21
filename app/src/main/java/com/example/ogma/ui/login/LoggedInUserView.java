@@ -3,21 +3,22 @@ package com.example.ogma.ui.login;
 import java.util.HashMap;
 import java.util.Map;
 
-class LoggedInUserView {
-    private final Map<String, String> data = new HashMap<>();
+public class LoggedInUserView {
+    public static final Map<String, String> data = new HashMap<>();
 
-    LoggedInUserView(String uid, String name, String lastName, String middleName, String role, String email, String phone, String vk, String tg, String birthday) {
-        this.data.put("UID", uid);
-        this.data.put("name", name);
-        this.data.put("lastName", lastName);
-        this.data.put("middleName", middleName);
-        this.data.put("role", role);
-        this.data.put("email", email);
-        this.data.put("vk", vk);
-        this.data.put("tg", tg);
-        this.data.put("phone", phone);
-        this.data.put("birthday", birthday);
+    public LoggedInUserView(String uid, String name, String lastName, String middleName, String role, String email, String phone, String vk, String tg, String birthday) {
+        data.put("UID", uid);
+        data.put("name", name);
+        data.put("lastName", lastName);
+        data.put("middleName", middleName);
+        data.put("role", role);
+        data.put("email", email);
+        data.put("vk", vk);
+        data.put("tg", tg);
+        data.put("phone", phone);
+        data.put("birthday", birthday);
     }
+    public LoggedInUserView() { }
 
-    Map<String, String> getData() { return data; }
+    public Map<String, String> getData() { return data; }
 }
