@@ -26,10 +26,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class SheduleFragment extends Fragment {
@@ -62,31 +63,52 @@ public class SheduleFragment extends Fragment {
         @Override
         protected String doInBackground(Void... params) {
             URL url;
-            int month = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);;
+            Document doc;
+            Map<String,String> preps = new HashMap<>();
+            Map<String,String> grps = new HashMap<>();
+            int month = Calendar.getInstance().get(Calendar.MONTH) + 1;
             String semestr;
             Map<String, String> data = new LoggedInUserView().getData();
             if (month >= 9) semestr = "osen";
             else semestr = "vesna";
-            if (data.get("role") == "1") {
+
+            String prepod_id = "";
+            String group_id = "";
+
+            try {
+                url = new URL("https://e-spo.ru/org/rasp/export/site/index?pid=1");
+                doc = Jsoup.parse(url, 3000);
+                Element prepods = doc.getElementById("raspbasesearch-prepod_id");
+                Element groups = doc.getElementById("raspbasesearch-group_id");
+                for (Element p : prepods.getElementsByTag("option")) {
+                    if (p.html() != "Преподаватель" && p.html() != "---")
+                        preps.put(p.html(), p.attr("value"));
+                }
+                for (Element g: groups.getElementsByTag("option")) {
+                    if (g.html() != "Группа")
+                        grps.put(g.html(), g.attr("value"));
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (Objects.equals(data.get("role"), "curator")) {
                 try {
-                    String fio = format("%s %s %s", data.get("lastName"), data.get("name"), data.get("middleName"));
-                    url = new URL(format("https://e-spo.ru/org/rasp/export/site/index?pid=1&RaspBaseSearch%5Bgroup_id%5D=&RaspBaseSearch%5Bsemestr%5D=%s&RaspBaseSearch%5Bprepod_id%5D=", semestr));
-                } catch (MalformedURLException e) {
+                    String fio = new String(format("%s %s %s", data.get("lastName"), data.get("name"), data.get("middleName")).getBytes("ISO-8859-1"), "UTF-8");
+                    url = new URL("https://e-spo.ru/org/rasp/export/site/index?pid=1&RaspBaseSearch%5Bgroup_id%5D=&RaspBaseSearch%5Bsemestr%5D=" + semestr + "&RaspBaseSearch%5Bprepod_id%5D=" + preps.get(fio));
+                    doc = Jsoup.parse(url, 3000);
+                } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
             else {
                 try {
-                    url = new URL(format("https://e-spo.ru/org/rasp/export/site/index?pid=1&RaspBaseSearch%5Bgroup_id%5D=44&RaspBaseSearch%5Bsemestr%5D=%s&RaspBaseSearch%5Bprepod_id%5D=", semestr));
-                } catch (MalformedURLException e) {
+                    String group = data.get("group");
+                    url = new URL("https://e-spo.ru/org/rasp/export/site/index?pid=1&RaspBaseSearch%5Bgroup_id%5D=" + grps.get(group) + "44&RaspBaseSearch%5Bsemestr%5D=" + semestr + "&RaspBaseSearch%5Bprepod_id%5D=");
+                    doc = Jsoup.parse(url, 3000);
+                } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-            }
-            Document doc;
-            try {
-                doc = Jsoup.parse(url, 3000);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
             }
             Elements newsHeadlines = doc.getElementsByClass("card h-100");
             for (Element headline : newsHeadlines) {
