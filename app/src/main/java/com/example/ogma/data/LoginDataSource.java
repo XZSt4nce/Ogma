@@ -12,7 +12,7 @@ public class LoginDataSource {
 
         String[] field = new String[]{"username", "password"};
         String[] data = new String[]{username, password};
-        String putResult, fetchResult, id="", name="", lastName="", middleName="", role="", email="", phone="", vk="", tg="", birthday="";
+        String putResult, fetchResult, id="", name="", lastName="", middleName="", role="", group="", email="", phone="", vk="", tg="", birthday="";
         Log.d("Pass", password);
         FetchData fetchData = new FetchData("https://silentiumguard.com/2508ac21cb37f801a8a00751e78c9a87.php");
         if (fetchData.startFetch()) {
@@ -35,14 +35,15 @@ public class LoginDataSource {
                 lastName = putResult.split(" ")[2];
                 middleName = putResult.split(" ")[3];
                 role = putResult.split(" ")[4];
-                email = putResult.split(" ")[5];
-                phone = putResult.split(" ")[6];
-                vk = putResult.split(" ")[7];
-                tg = putResult.split(" ")[8];
-                birthday = putResult.split(" ")[9];
+                group = putResult.split(" ")[5];
+                email = putResult.split(" ")[6];
+                phone = putResult.split(" ")[7];
+                vk = putResult.split(" ")[8];
+                tg = putResult.split(" ")[9];
+                birthday = putResult.split(" ")[10];
             }
         }
-        return new Result.Success<>(new LoggedInUser(id, name, lastName, middleName, role, email, phone, vk, tg, birthday));
+        return new Result.Success<>(new LoggedInUser(id, name, lastName, middleName, role, group, email, phone, vk, tg, birthday));
     }
 
     public void logout() {

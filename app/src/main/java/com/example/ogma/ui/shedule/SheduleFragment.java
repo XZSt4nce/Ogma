@@ -17,8 +17,8 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.ogma.ui.login.LoggedInUserView;
 import com.example.ogma.databinding.FragmentSheduleBinding;
+import com.example.ogma.ui.login.LoggedInUserView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -28,7 +28,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Map;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -62,14 +62,14 @@ public class SheduleFragment extends Fragment {
         @Override
         protected String doInBackground(Void... params) {
             URL url;
-            int month = new Date().getMonth();
+            int month = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);;
             String semestr;
             Map<String, String> data = new LoggedInUserView().getData();
             if (month >= 9) semestr = "osen";
             else semestr = "vesna";
             if (data.get("role") == "1") {
                 try {
-                    String fio = format("%s %s %s", data.get("latName"), data.get("name"), data.get("middleName"));
+                    String fio = format("%s %s %s", data.get("lastName"), data.get("name"), data.get("middleName"));
                     url = new URL(format("https://e-spo.ru/org/rasp/export/site/index?pid=1&RaspBaseSearch%5Bgroup_id%5D=&RaspBaseSearch%5Bsemestr%5D=%s&RaspBaseSearch%5Bprepod_id%5D=", semestr));
                 } catch (MalformedURLException e) {
                     throw new RuntimeException(e);
