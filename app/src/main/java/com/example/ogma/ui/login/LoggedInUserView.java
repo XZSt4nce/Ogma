@@ -12,7 +12,7 @@ public class LoggedInUserView {
         data.put("lastName", lastName);
         data.put("middleName", middleName);
         data.put("role", role);
-        data.put ("group", group);
+        data.put("group", group);
         data.put("email", email);
         data.put("vk", vk);
         data.put("tg", tg);
