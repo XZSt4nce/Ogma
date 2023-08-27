@@ -10,7 +10,7 @@ public class OptionsViewModel extends ViewModel {
 
     public OptionsViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("Hi");
+        mText.setValue("Находится в разработке");
     }
 
     public LiveData<String> getText() {
