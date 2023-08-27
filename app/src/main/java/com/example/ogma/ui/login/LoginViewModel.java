@@ -47,7 +47,15 @@ public class LoginViewModel extends ViewModel {
             } else if (result.toString().equals("Error[exception=Server connection error]")) {
                 loginResult.setValue(new LoginResult(R.string.connection_error));
             } else if (result.toString().equals("Error[exception=Wrong login or password]")) {
-                loginResult.setValue(new LoginResult(R.string.invalid_username_or_password));
+                result = loginRepository.login(username, encryptThisString(username, password));
+                if (result instanceof Result.Success) {
+                    Map<String, String> data = ((Result.Success<LoggedInUser>) result).getData().getData();
+                    loginResult.setValue(new LoginResult(new LoggedInUserView(data.get("UID"), data.get("name"), data.get("lastName"), data.get("middleName"), data.get("role"), data.get("group"), data.get("email"), data.get("phone"), data.get("vk"), data.get("tg"), data.get("birthday"))));
+                } else if (result.toString().equals("Error[exception=Server connection error]")) {
+                    loginResult.setValue(new LoginResult(R.string.connection_error));
+                } else if (result.toString().equals("Error[exception=Wrong login or password]")) {
+                    loginResult.setValue(new LoginResult(R.string.invalid_username_or_password));
+                }
             }
         }
     }

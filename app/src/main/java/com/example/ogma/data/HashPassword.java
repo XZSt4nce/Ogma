@@ -38,7 +38,7 @@ public class HashPassword {
     {
         String generatedPassword = "";
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(password.getBytes(StandardCharsets.UTF_8));
             byte[] bytes = md.digest(login.getBytes(StandardCharsets.UTF_8));
             StringBuilder sb = new StringBuilder();
@@ -49,7 +49,7 @@ public class HashPassword {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        long timestamp = System.currentTimeMillis() / 10000 % 8640;
+        long timestamp = System.currentTimeMillis() / 5000 % 8640;
         return SHA1(generatedPassword+timestamp);
     }
 }

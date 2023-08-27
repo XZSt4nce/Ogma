@@ -1,7 +1,5 @@
 package com.example.ogma.data;
 
-import android.util.Log;
-
 import com.example.ogma.data.model.LoggedInUser;
 import com.vishnusivadas.advanced_httpurlconnection.FetchData;
 import com.vishnusivadas.advanced_httpurlconnection.PutData;
@@ -10,11 +8,10 @@ public class LoginDataSource {
 
     public Result<LoggedInUser> login(String username, String password) {
 
-        String[] field = new String[]{"username", "password"};
-        String[] data = new String[]{username, password};
+        String[] field = new String[] { "username", "password" };
+        String[] data = new String[] { username, password };
         String putResult, fetchResult, id="", name="", lastName="", middleName="", role="", group="", email="", phone="", vk="", tg="", birthday="";
-        Log.d("Pass", password);
-        FetchData fetchData = new FetchData("https://silentiumguard.com/2508ac21cb37f801a8a00751e78c9a87.php");
+        FetchData fetchData = new FetchData("https://silentiumguard.com/c4f822fec11066d1ed15469717e6d9e1.php");
         if (fetchData.startFetch()) {
             if (fetchData.onComplete()) {
                 fetchResult = fetchData.getResult();
@@ -23,12 +20,20 @@ public class LoginDataSource {
             }
         }
 
-        PutData putData = new PutData("https://silentiumguard.com/c4f822fec11066d1ed15469717e6d9e1.php", "POST", field, data);
+        PutData putData = new PutData("https://silentiumguard.com/d56b699830e77ba53855679cb1d252da.php", "POST", field, data);
         if (putData.startPut()) {
             if (putData.onComplete()) {
-                putResult = putData.getResult();
+                putResult = putData.getResult().trim();
 
-                if (putResult.trim().isEmpty()) return new Result.Error("Wrong login or password");
+                if (putResult.isEmpty()) {
+                    PutData putData2 = new PutData("https://silentiumguard.com/d56b699830e77ba53855679cb1d252da.php", "POST", field, data);
+                    if (putData2.startPut()) {
+                        if (putData2.onComplete()) {
+                            putResult = putData2.getResult().trim();
+                            if (putResult.isEmpty()) return new Result.Error("Wrong login or password");
+                        }
+                    }
+                }
 
                 id = putResult.split(" ")[0];
                 name = putResult.split(" ")[1];
